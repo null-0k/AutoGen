@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <locale.h>
 
 #define SIZE 16
 #define HALF_SIZE (SIZE / 2)
