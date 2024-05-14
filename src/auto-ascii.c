@@ -1,4 +1,4 @@
-//#coding : UTF-8
+// coding : UTF-8
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -6,37 +6,48 @@
 
 #define SIZE 16
 #define HALF_SIZE (SIZE / 2)
+#define SYMBOL_ROWS 5
+#define SYMBOL_COLS 3
 
-int main () {
-    setlocale(LC_ALL, "");  // ロケールを設定
-    char *outputs[SIZE][SIZE]; 
-    char *symbols[5][3] = {
-        {"＋", "｜", "\xE3\x80\x80"}, // +|(space)
-        {"＋", "ー", "\xE3\x80\x80"}, // +-(space)
-        {"／", "＼", "\xE3\x80\x80"}, // /\(space)
-        {"｜", "ー", "\xE3\x80\x80"}, // |-(space)
-        {"／", "／", "\xE3\x80\x80"}  // //(space)
-    };
+// The symbols array uses full-width Japanese characters
+const char *symbols[SYMBOL_ROWS][SYMBOL_COLS] = {
+    {"＋", "｜", "　"}, // + | space
+    {"＋", "ー", "　"}, // + - space
+    {"／", "＼", "　"}, // / \ space
+    {"｜", "ー", "　"}, // | - space
+    {"／", "／", "　"}  // / / space
+};
 
-    srand((unsigned int)time(NULL));
+void draw() {
+    // Initialize all elements to NULL
+    const char *output[SIZE][SIZE] = {0}; 
+
+    int id_symbol = rand() % SYMBOL_ROWS;
     
-    //点対照のパターンを生成
+    // Generate a point-symmetric pattern
     for (int i = 0; i < HALF_SIZE; i++) {
         for (int j = 0; j < HALF_SIZE; j++) {
-            char *str = symbols[rand() % 5][rand() % 3];
-            outputs[i][j] = str;
-            outputs[i][SIZE - 1 - j] = str;
-            outputs[SIZE - 1 - i][j] = str;
-            outputs[SIZE - 1 - i][SIZE - 1 - j] = str;
+            const char *str = symbols[id_symbol][rand() % SYMBOL_COLS];
+
+            output[i][j] = str;
+            output[i][SIZE - 1 - j] = str;
+            output[SIZE - 1 - i][j] = str;
+            output[SIZE - 1 - i][SIZE - 1 - j] = str;
         }
     }
 
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            printf("%s", outputs[i][j]);
+            printf("%s", output[i][j]);
         }
         printf("\n");
     }
+}
+
+int main(void) {
+    srand((unsigned int)time(NULL));
+
+    draw();
 
     return 0;
 }
